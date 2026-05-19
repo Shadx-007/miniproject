@@ -4,7 +4,7 @@ import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 import { motion } from 'framer-motion';
 import { Clock4, RefreshCw } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useAlerts } from '@/hooks/useApi';
 import { LoadingSpinner, ErrorMessage } from '@/components/loading-spinner';
 
@@ -45,6 +45,19 @@ export default function AlertsPage() {
   const [filter, setFilter] = useState('All');
   const { data: alertsData, loading, error, refetch } = useAlerts();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [simulatedAlerts, setSimulatedAlerts] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Load simulated alerts from localStorage
+    const stored = localStorage.getItem('simulatedAlerts');
+    if (stored) {
+      try {
+        setSimulatedAlerts(JSON.parse(stored));
+      } catch (err) {
+        console.error('Failed to parse simulated alerts:', err);
+      }
+    }
+  }, []);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -54,12 +67,20 @@ export default function AlertsPage() {
 
   const filterOptions = ['All', 'Critical', 'High', 'Medium', 'Low'];
   
+  const allAlerts = useMemo(() => {
+    if (!alertsData || !Array.isArray(alertsData)) {
+      return simulatedAlerts;
+    }
+    // Combine both original alerts and simulated alerts
+    return [...simulatedAlerts, ...alertsData];
+  }, [alertsData, simulatedAlerts]);
+  
   const filteredAlerts = useMemo(() => {
-    if (!alertsData || !Array.isArray(alertsData)) return [];
+    if (!allAlerts || !Array.isArray(allAlerts)) return [];
     return filter === 'All' 
-      ? alertsData 
-      : alertsData.filter((alert: any) => alert.severity === filter);
-  }, [alertsData, filter]);
+      ? allAlerts 
+      : allAlerts.filter((alert: any) => alert.severity === filter);
+  }, [allAlerts, filter]);
 
   return (
     <main className="bg-black text-white min-h-screen">
@@ -106,7 +127,7 @@ export default function AlertsPage() {
                     : 'bg-gray-900 text-gray-300 hover:bg-gray-800'
                 }`}
               >
-                {option} {option !== 'All' && `(${alertsData.filter(a => a.severity === option).length})`}
+                {option} {option !== 'All' && `(${allAlerts?.filter(a => a.severity === option)?.length || 0})`}
               </button>
             ))}
           </motion.div>

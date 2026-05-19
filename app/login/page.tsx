@@ -1,25 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import Navbar from '@/components/navbar';
 
 export default function LoginPage() {
+  const router = useRouter();
+  
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (!isLogin && !name) {
+      setError('Please enter your name');
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      alert(isLogin ? 'Login successful!' : 'Account created!');
+      // Store login info in localStorage
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userName', isLogin ? email.split('@')[0] : name);
+      router.push('/dashboard');
     }, 1500);
   };
 
@@ -76,6 +95,17 @@ export default function LoginPage() {
                   : 'Join thousands of enterprises protecting their IoT'}
               </p>
             </motion.div>
+
+            {/* Error Message */}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-900/30 border border-red-700 rounded-lg p-3 text-red-300 text-sm"
+              >
+                {error}
+              </motion.div>
+            )}
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 mt-8">

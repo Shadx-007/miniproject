@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import ProfileDropdown from './profile-dropdown';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -12,6 +13,7 @@ export default function Navbar() {
     { href: '/features', label: 'Features' },
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/dashboard', label: 'Dashboard' },
+    { href: '/testing-lab', label: 'Testing Lab' },
     { href: '/analytics', label: 'Analytics' },
     { href: '/devices', label: 'Devices' },
     { href: '/alerts', label: 'Alerts' },
@@ -43,12 +45,7 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/login"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 text-sm font-medium"
-          >
-            Login
-          </Link>
+          <ProfileDropdown />
         </div>
       </div>
     </motion.nav>

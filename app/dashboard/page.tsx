@@ -8,6 +8,15 @@ import Footer from '@/components/footer';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useSecurity } from '@/hooks/useApi';
 import { LoadingSpinner, SkeletonCard, ErrorMessage } from '@/components/loading-spinner';
+import AutoSecurityTest from '@/components/auto-security-test';
+import SimulationControlPanel from '@/components/simulation-control-panel';
+import LiveDataStream from '@/components/live-data-stream';
+import AIDecisionPanel from '@/components/ai-decision-panel';
+import AutoFixPanel from '@/components/auto-fix-panel';
+import AdvancedGraphs from '@/components/advanced-graphs';
+import NotificationPanel from '@/components/notification-panel';
+import DataInspectorPanel from '@/components/data-inspector-panel';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -116,6 +125,56 @@ export default function DashboardPage() {
               <OverviewCard icon={Activity} title="Threats Blocked" value={data.threatsBlocked.toString()} subtitle="Last 24h" trend={`↑ ${data.threatsTrend}`} />
             </div>
           ) : null}
+        </div>
+      </section>
+
+      {/* Auto Security Test Section */}
+      <section className="px-4 md:px-6 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <AutoSecurityTest />
+        </div>
+      </section>
+
+      {/* Simulation Control Panel */}
+      <section className="px-4 md:px-6 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <SimulationControlPanel />
+        </div>
+      </section>
+
+      {/* Live Data Stream & AI Decision */}
+      <section className="px-4 md:px-6 pb-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <LiveDataStream />
+          <AIDecisionPanel />
+        </div>
+      </section>
+
+      {/* Auto Fix Execution */}
+      <section className="px-4 md:px-6 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <AutoFixPanel />
+        </div>
+      </section>
+
+      {/* Advanced Analytics */}
+      <section className="px-4 md:px-6 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <AdvancedGraphs />
+        </div>
+      </section>
+
+      {/* Notifications & Data Inspector */}
+      <section className="px-4 md:px-6 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <NotificationPanel />
+        </div>
+      </section>
+
+      {/* Data Inspector */}
+      <section className="px-4 md:px-6 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <DataInspectorPanel />
         </div>
       </section>
 
